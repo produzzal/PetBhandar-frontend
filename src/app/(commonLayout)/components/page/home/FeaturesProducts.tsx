@@ -34,7 +34,7 @@ const FeaturedProducts = () => {
     <section className=" py-16 bg-gray-100">
       <div className="container mx-auto px-0 sm:px-4">
         <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
-          Top-Choice Products Everyone’s Talking About
+          The Pet Products Everyone’s Raving About - Only at PetBhandar!
         </h2>
 
         {/* Product Grid */}

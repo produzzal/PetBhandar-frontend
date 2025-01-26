@@ -4,9 +4,9 @@ const Banner = () => {
   return (
     <div className="relative w-full h-[230px] lg:h-[450px] mt-6">
       {/* Background Image using Image component */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 opacity-75">
         <Image
-          src="/assets/banner.jpg"
+          src="/assets/banner-pb.webp"
           alt="Banner Image"
           layout="fill"
           objectFit="cover"
@@ -17,20 +17,22 @@ const Banner = () => {
       {/* Text Section */}
       <div className="absolute inset-0 flex items-center justify-center text-center text-white p-6 bg-black bg-opacity-50">
         <div>
-          <h1 className="text-3xl font-bold sm:text-4xl">
-            Welcome to <span className="text-blue-400">S</span>
-            <span className="text-red-400">h</span>
-            <span className="text-yellow-400">o</span>
-            <span className="text-green-400">p</span>
-            <span className="text-purple-400">n</span>
-            <span className="text-pink-400">o</span>
-            <span className="text-indigo-400">M</span>
-            <span className="text-teal-400">e</span>
-            <span className="text-orange-400">l</span>
-            <span className="text-gray-400">a</span>
+          <h1 className="text-3xl font-bold sm:text-4xl text-opacity-100">
+            Welcome to <span className="text-red-600">P</span>
+            <span className="text-blue-600">e</span>
+            <span className="text-green-600">t</span>
+            <span className="text-yellow-600">B</span>
+            <span className="text-indigo-600">h</span>
+            <span className="text-purple-600">a</span>
+            <span className="text-pink-600">n</span>
+            <span className="text-teal-600">d</span>
+            <span className="text-orange-600">a</span>
+            <span className="text-gray-600">r</span>
           </h1>
-          <p className="mt-4 text-lg sm:text-xl">
-            Discover products that bring your dreams to life.
+
+          <p className="mt-4 text-lg font-semibold sm:text-xl">
+            Discover products that bring your pet’s dreams to life at
+            PetBhandar.
           </p>
           <button className="mt-6 rounded bg-blue-700 px-4 py-2 text-white hover:bg-blue-600">
             Explore Now

@@ -112,7 +112,7 @@ const Products = () => {
     <div className="container mx-auto px-4 py-8">
       {/* Title */}
       <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
-        Endless Choices Await - Browse Our Full Collection!
+        For Every Pet, a Perfect Choice - Browse Our Complete Range!
       </h2>
 
       {/* Search and Category Filter Section */}

@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
                 href="mailto:support@roomsync.com"
                 className="hover:text-[#F1F1F1]"
               >
-                support@roomsync.com
+                support@petbhandar.com
               </a>
             </p>
             <p className="text-lg">
@@ -114,7 +114,7 @@ const Footer: React.FC = () => {
 
         {/* Footer Bottom */}
         <div className="mt-8 text-center text-sm text-[#F1F1F1]">
-          <p>&copy; 2025 RoomSync. All rights reserved.</p>
+          <p>&copy; 2025 PetBhandar. All rights reserved.</p>
         </div>
       </div>
     </footer>

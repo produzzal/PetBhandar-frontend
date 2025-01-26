@@ -1,6 +1,7 @@
 import Banner from "./(commonLayout)/components/page/home/Banner";
 import FeaturedProducts from "./(commonLayout)/components/page/home/FeaturesProducts";
 import Products from "./(commonLayout)/components/page/home/Products";
+import Footer from "./(commonLayout)/components/shared/Footer";
 import Navbar from "./(commonLayout)/components/shared/Navbar";
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
         <FeaturedProducts />
         <Products />
       </div>
+      <Footer />
     </div>
   );
 }
