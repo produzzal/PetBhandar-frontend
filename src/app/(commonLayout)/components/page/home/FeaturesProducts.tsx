@@ -31,10 +31,10 @@ const FeaturedProducts = () => {
   ];
 
   return (
-    <section className="featured-products py-16 bg-gray-100">
+    <section className=" py-16 bg-gray-100">
       <div className="container mx-auto px-0 sm:px-4">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-          Featured Products
+        <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
+          Top-Choice Products Everyone’s Talking About
         </h2>
 
         {/* Product Grid */}
