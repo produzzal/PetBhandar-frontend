@@ -32,7 +32,9 @@ const Navbar = () => {
 
       {/* Navbar End */}
       <div className="navbar-end">
-        <a className="btn bg-[#CFF1FB] text-sm lg:text-lg ]">Login</a>
+        <a className="btn text-white bg-blue-700 hover:bg-blue-500 text-sm lg:text-lg ]">
+          Login
+        </a>
       </div>
     </div>
   );
