@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <div className="navbar bg-[#003B95] text-white px-4">
+    <div className="navbar bg-[#003B95] text-white">
       {/* Navbar Start */}
       <div className="navbar-start">
         {/* Mobile Menu */}
