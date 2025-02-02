@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const Banner = () => {
   return (
@@ -34,9 +35,11 @@ const Banner = () => {
             Discover products that bring your pet’s dreams to life at
             PetBhandar.
           </p>
-          <button className="mt-6 rounded bg-blue-700 px-4 py-2 text-white hover:bg-blue-600">
-            Explore Now
-          </button>
+          <Link href="/products">
+            <button className="mt-6 rounded bg-blue-700 px-4 py-2 text-white hover:bg-blue-600">
+              Explore Now
+            </button>
+          </Link>
         </div>
       </div>
     </div>

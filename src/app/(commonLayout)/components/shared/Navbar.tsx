@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link"; // Import Link from Next.js
 import { FaShoppingCart } from "react-icons/fa"; // Import React Icons
 import Image from "next/image";
@@ -7,8 +7,19 @@ import Image from "next/image";
 const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>(""); // For search input
-  const isAuthenticated = false; // Assuming authentication state
-  const isAdmin = false; // Assuming admin state
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  // Check if the user is authenticated and their role from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setIsAuthenticated(true);
+      setIsAdmin(user.role === "admin");
+    }
+  }, []);
 
   // Toggle dropdown menu
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
@@ -18,7 +29,10 @@ const Navbar: React.FC = () => {
 
   // Handle logout
   const handleLogout = () => {
-    // Add logout logic here
+    // Clear user data from localStorage and set state to initial values
+    localStorage.removeItem("user");
+    setIsAuthenticated(false);
+    setIsAdmin(false);
   };
 
   // Handle search input
@@ -142,9 +156,9 @@ const Navbar: React.FC = () => {
             >
               <div className=" rounded-full">
                 <Image
-                  width={10}
-                  height={10}
-                  src="https://i.ibb.co.com/dDV3S33/download.png"
+                  width={20}
+                  height={20}
+                  src="/assets/user.png"
                   alt="User Avatar"
                 />
               </div>
