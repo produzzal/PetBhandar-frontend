@@ -173,10 +173,34 @@ const Navbar: React.FC = () => {
                   <>
                     <li>
                       <Link
-                        href="/admin/dashboard?section=room"
+                        href="/admin/"
                         className="text-black hover:bg-blue-500 hover:text-white"
                       >
-                        Dashboard
+                        User Management
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/admin/"
+                        className="text-black hover:bg-blue-500 hover:text-white"
+                      >
+                        Product Management
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/admin/"
+                        className="text-black hover:bg-blue-500 hover:text-white"
+                      >
+                        Category Management
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/admin/"
+                        className="text-black hover:bg-blue-500 hover:text-white"
+                      >
+                        Order and payment Management
                       </Link>
                     </li>
                     <li>

@@ -50,10 +50,12 @@ const ProductFilter = () => {
         className="p-2 border border-gray-300 rounded w-full md:w-1/4"
       >
         <option value="all">All Categories</option>
-        <option value="pet food">Pet Food</option>
-        <option value="grooming & care">Grooming & Care</option>
-        <option value="toys & training">Toys & Training</option>
-        <option value="accessories">Accessories</option>
+        <option value="Cat Food">Cat Food</option>
+        <option value="Bird Food">Bird Food</option>
+        <option value="Cat Care"> Cat Care</option>
+        <option value="Cat Dress">Cat Dress</option>
+        <option value="Cat Carry Bag">Cat Carry Bag</option>
+        <option value="Cat Bed">Cat Bed</option>
       </select>
     </div>
   );
