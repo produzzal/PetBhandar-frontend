@@ -33,7 +33,7 @@ const page = () => {
         // Redirect to the provided redirect URL or default to home page after a successful login
         setTimeout(() => {
           window.location.href = redirect ? redirect : "/";
-        }, 2000);
+        }, 1000);
       } else {
         toast.error(result.message || "Login failed"); // Handle any error message
       }

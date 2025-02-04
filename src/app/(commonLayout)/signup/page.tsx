@@ -27,7 +27,7 @@ const page = () => {
         toast.success(result.message);
         setTimeout(() => {
           window.location.href = "/login";
-        }, 2000);
+        }, 1000);
       } else {
         if (result.message == "User already exists") {
           toast.error(result.message);
