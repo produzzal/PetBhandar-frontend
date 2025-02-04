@@ -80,9 +80,13 @@ const ProductManagement = async ({ searchParams }: { searchParams: any }) => {
 
               {/* Update and Delete Buttons */}
               <div className="flex justify-between mt-4">
-                <button className="bg-yellow-500 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-600 transition-all duration-200">
-                  Update
-                </button>
+                <Link
+                  href={`/admin/product-management/update-product/${product._id}`}
+                >
+                  <button className="bg-yellow-500 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-600 transition-all duration-200">
+                    Update
+                  </button>
+                </Link>
                 <button className="bg-red-500 text-white px-3 sm:px-4 py-2 rounded hover:bg-red-600 transition-all duration-200">
                   Delete
                 </button>
