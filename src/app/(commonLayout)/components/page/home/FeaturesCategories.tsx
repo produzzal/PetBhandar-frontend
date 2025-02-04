@@ -6,26 +6,26 @@ import nexiosInstance from "@/config/nexios.config";
 
 const FeaturedCategories: React.FC = () => {
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   console.log(categories);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await nexiosInstance.get("/categories");
+        const response = await nexiosInstance.get("/categories", {
+          next: {
+            revalidate: 30,
+          },
+        });
         setCategories(response.data.data);
       } catch (err) {
         setError("Failed to load categories.");
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchCategories();
   }, []);
 
-  if (loading) return <p className="text-center">Loading categories...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (

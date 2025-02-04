@@ -173,7 +173,7 @@ const Navbar: React.FC = () => {
                   <>
                     <li>
                       <Link
-                        href="/admin/"
+                        href="/admin/user-management"
                         className="text-black hover:bg-blue-500 hover:text-white"
                       >
                         User Management
@@ -181,7 +181,7 @@ const Navbar: React.FC = () => {
                     </li>
                     <li>
                       <Link
-                        href="/admin/"
+                        href="/admin/product-management"
                         className="text-black hover:bg-blue-500 hover:text-white"
                       >
                         Product Management
@@ -189,7 +189,7 @@ const Navbar: React.FC = () => {
                     </li>
                     <li>
                       <Link
-                        href="/admin/"
+                        href="/admin/category-management"
                         className="text-black hover:bg-blue-500 hover:text-white"
                       >
                         Category Management
@@ -197,7 +197,7 @@ const Navbar: React.FC = () => {
                     </li>
                     <li>
                       <Link
-                        href="/admin/"
+                        href="/admin/order-management"
                         className="text-black hover:bg-blue-500 hover:text-white"
                       >
                         Order and payment Management

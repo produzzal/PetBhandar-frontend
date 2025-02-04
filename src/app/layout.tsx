@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./lib/Providers";
-import Navbar from "./(commonLayout)/components/shared/Navbar";
-import Footer from "./(commonLayout)/components/shared/Footer";
 
 export const metadata: Metadata = {
   title: "Pet Bhandar",
@@ -18,9 +16,7 @@ export default function RootLayout({
     <html lang="en" data-theme="light">
       <body className={`antialiased`}>
         <Providers>
-          <Navbar />
           <div className="mx-auto">{children}</div>
-          <Footer />
         </Providers>
       </body>
     </html>
