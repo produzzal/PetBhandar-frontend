@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 const UserManagement = () => {
   // State to store users and loading/error states
   const [users, setUsers] = useState([]);
+  console.log("su", users);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 

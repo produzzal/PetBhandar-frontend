@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link"; // Import Link from Next.js
 import { FaShoppingCart } from "react-icons/fa"; // Import React Icons
 import Image from "next/image";
+import nexiosInstance from "@/config/nexios.config";
 
 const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -28,11 +29,24 @@ const Navbar: React.FC = () => {
   const closeDropdown = () => setIsDropdownOpen(false);
 
   // Handle logout
-  const handleLogout = () => {
-    // Clear user data from localStorage and set state to initial values
-    localStorage.removeItem("user");
-    setIsAuthenticated(false);
-    setIsAdmin(false);
+  const handleLogout = async () => {
+    try {
+      const response = await nexiosInstance.post("/auth/logout", {});
+
+      if (response.status === 200) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        setIsAuthenticated(false);
+        setIsAdmin(false);
+
+        window.location.href = "/";
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   // Handle search input

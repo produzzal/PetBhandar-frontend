@@ -5,6 +5,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import nexiosInstance from "@/config/nexios.config";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSearchParams } from "next/navigation";
 
 const page = () => {
   const {
@@ -13,6 +14,9 @@ const page = () => {
     formState: { errors },
   } = useForm();
 
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+
   const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitHandler<any> = async (data: any) => {
@@ -20,20 +24,19 @@ const page = () => {
     try {
       const response = await nexiosInstance.post("/auth/login", data);
       const result = response.data;
+      console.log(result.token);
 
       if (response.status === 200) {
         toast.success(result.message);
         localStorage.setItem("user", JSON.stringify(result.data));
 
+        // Redirect to the provided redirect URL or default to home page after a successful login
         setTimeout(() => {
-          window.location.href = "/";
+          window.location.href = redirect ? redirect : "/";
         }, 2000);
       } else {
         toast.error(result.message || "Login failed"); // Handle any error message
       }
-
-      // Redirect to homepage or another route
-      // window.location.href = "/";
     } catch (error: any) {
       console.error("Error:", error);
 
