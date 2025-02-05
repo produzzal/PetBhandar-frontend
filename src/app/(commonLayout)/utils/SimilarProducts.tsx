@@ -1,43 +1,42 @@
-"use client";
-import nexiosInstance from "@/config/nexios.config";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import nexiosInstance from "@/config/nexios.config";
 
-const FeaturedProducts = () => {
-  const [featuresProducts, setFeaturesProducts] = useState([]);
-  const [error, setError] = useState<string | null>(null);
-  console.log("FP", featuresProducts);
+const SimilarProducts = ({ category }: { category: string }) => {
+  const [similarProducts, setSimilarProducts] = useState([]);
+  console.log(category);
+  console.log("products", similarProducts);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchSimilarProducts = async () => {
+      if (!category) return; // Avoid fetching if category is not available
+
       try {
-        const response = await nexiosInstance.get("/products");
-        setFeaturesProducts(response.data.data);
-      } catch (err) {
-        setError("Failed to load products.");
+        const response = await nexiosInstance.get(
+          `/products?category=${category}`
+        );
+        console.log(response);
+        setSimilarProducts(response.data.data); // Update state with products
+      } catch (error) {
+        console.error("Error fetching similar products:", error);
       }
     };
 
-    fetchProducts();
-  }, []);
+    fetchSimilarProducts();
+  }, [category]);
 
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (!similarProducts) return <p>No similar products available.</p>;
 
   return (
-    <div className="py-16">
-      <div className="container mx-auto px-0 sm:px-4">
-        <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
-          Featured Pet Products Your Pets Will Love!
-        </h2>
-
-        {/* Product Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {featuresProducts.slice(0, 8).map((product) => (
-            <div
-              key={product._id}
-              className="product-card bg-white w-full p-3 md:p-6 rounded-2xl shadow-lg hover:shadow-neutral-400 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer"
-            >
+    <div className="similar-products-section my-8 mt-32">
+      <h2 className="text-xl md:text-3xl font-bold text-left mb-8 text-gray-800">
+        Similar Products
+      </h2>
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        {similarProducts.slice(0, 4).map((product) => (
+          <Link href={`/products/${product._id}`} key={product.id}>
+            <div className="product-card bg-white w-full p-3 md:p-6 rounded-2xl shadow-lg hover:shadow-neutral-400 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer">
               {/* Image with Zoom Effect */}
               <div className="w-full h-40 sm:h-52 md:h-52 relative mb-4 overflow-hidden">
                 {" "}
@@ -75,21 +74,11 @@ const FeaturedProducts = () => {
                 </button>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* See More Products Button */}
-        <div className="text-center mt-8">
-          <Link
-            href="/products"
-            className="rounded bg-blue-700 px-6 py-3 text-white hover:bg-blue-600 transition-all duration-200 cursor-pointer"
-          >
-            See All Products
           </Link>
-        </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default FeaturedProducts;
+export default SimilarProducts;
