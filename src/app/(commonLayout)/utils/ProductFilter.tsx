@@ -1,6 +1,8 @@
 "use client"; // ✅ Client Component
 
+import nexiosInstance from "@/config/nexios.config";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const ProductFilter = () => {
   const router = useRouter();
@@ -9,6 +11,28 @@ const ProductFilter = () => {
   // Get current filter values from URL
   const searchQuery = searchParams.get("search") || "";
   const selectedCategory = searchParams.get("category") || "all";
+  const [categoryNames, setCategoryNames] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await nexiosInstance.get("/categories", {
+          next: {
+            revalidate: 30,
+          },
+        });
+        // Extract only the names and store them in an array
+        const names = response.data.data.map(
+          (category: { name: string }) => category.name
+        );
+        setCategoryNames(names);
+      } catch (err) {
+        console.log("Failed to load categories.");
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Update URL on search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,12 +74,11 @@ const ProductFilter = () => {
         className="p-2 border border-gray-300 rounded w-full md:w-1/4"
       >
         <option value="all">All Categories</option>
-        <option value="Cat Food">Cat Food</option>
-        <option value="Bird Food">Bird Food</option>
-        <option value="Cat Care"> Cat Care</option>
-        <option value="Cat Dress">Cat Dress</option>
-        <option value="Cat Carry Bag">Cat Carry Bag</option>
-        <option value="Cat Bed">Cat Bed</option>
+        {categoryNames.map((category) => (
+          <option key={category} value={category}>
+            {category}
+          </option>
+        ))}
       </select>
     </div>
   );
