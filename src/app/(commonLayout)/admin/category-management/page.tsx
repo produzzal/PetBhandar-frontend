@@ -15,7 +15,7 @@ const CategoryManagement = async () => {
 
       {/* Add Category Button */}
       <div className="flex justify-center mb-6">
-        <Link href="/admin/product-management/add-category">
+        <Link href="/admin/category-management/add-category">
           <button className="bg-blue-500 text-white px-32 md:px-64 py-3 rounded-lg shadow-md hover:bg-blue-600 transition">
             Add Category
           </button>
