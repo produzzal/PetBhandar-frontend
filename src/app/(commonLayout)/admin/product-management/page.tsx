@@ -2,7 +2,7 @@ import ProductFilter from "@/app/(commonLayout)/utils/ProductFilter";
 import nexiosInstance from "@/config/nexios.config";
 import Image from "next/image";
 import Link from "next/link";
-import DeleteButton from "../../utils/DeleteButton";
+import DeleteButton from "../../utils/ProductDeleteButton";
 
 const ProductManagement = async ({ searchParams }: { searchParams: any }) => {
   const category = searchParams?.category || "all";
@@ -21,20 +21,6 @@ const ProductManagement = async ({ searchParams }: { searchParams: any }) => {
   const response = await fetch(apiUrl);
   const data = await response.json();
   const products = data.data || [];
-
-  const handleDelete = async (productId) => {
-    try {
-      const response = await nexiosInstance.delete(`/products/${productId}`);
-
-      if (response.status === 200) {
-        window.location.reload(); // Refresh the page to update the product list
-      } else {
-        throw new Error("Failed to delete the product.");
-      }
-    } catch (error) {
-      console.error("Error deleting product:", error);
-    }
-  };
 
   return (
     <div className="container mx-auto px-4">

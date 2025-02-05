@@ -1,6 +1,7 @@
 import Image from "next/image";
 import nexiosInstance from "@/config/nexios.config";
 import Link from "next/link";
+import DeleteButton from "../../utils/CategoryDeleteButton";
 
 const CategoryManagement = async () => {
   const response = await nexiosInstance.get("/categories");
@@ -62,11 +63,7 @@ const CategoryManagement = async () => {
                     Update
                   </button>
                 </Link>
-                {/* Delete Button Component can be added here */}
-                {/* Assuming you have a DeleteButton component */}
-                <button className="bg-red-500 text-white px-3 sm:px-4 py-2 rounded hover:bg-red-600 transition-all duration-200">
-                  Delete
-                </button>
+                <DeleteButton categoryId={category._id} />
               </div>
             </div>
           ))
