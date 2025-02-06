@@ -1,20 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { ApiResponse } from "@/app/(commonLayout)/utils/interface/category.interface";
 import nexiosInstance from "@/config/nexios.config";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
-const UpdateCategoryForm: React.FC = ({ params }) => {
-  const { categoryId } = React.use(params);
-  const [category, setCategory] = useState<any>(null); // Use 'any' or define a type for category
-  console.log(categoryId);
+const UpdateCategoryForm = ({ params }: { params: any }) => {
+  const { categoryId }: { categoryId: any } = React.use(params);
+  const [category, setCategory] = useState<any>(null);
 
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await nexiosInstance.get(`/categories/${categoryId}`);
+        const response = await nexiosInstance.get<ApiResponse>(
+          `/categories/${categoryId}`
+        );
         setCategory(response.data.data); // Set the fetched category data
       } catch (error) {
-        console.log("Error fetching category data:", error);
+        console.error("Error fetching category data:", error);
       }
     };
 
@@ -34,7 +37,7 @@ const UpdateCategoryForm: React.FC = ({ params }) => {
     };
 
     try {
-      const response = await nexiosInstance.put(
+      const response = await nexiosInstance.put<ApiResponse>(
         `/categories/${categoryId}`,
         categoryData
       );
@@ -48,6 +51,7 @@ const UpdateCategoryForm: React.FC = ({ params }) => {
       }
     } catch (error) {
       toast.error("Error updating category");
+      console.error("Error updating category", error);
     }
   };
 
@@ -117,7 +121,7 @@ const UpdateCategoryForm: React.FC = ({ params }) => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-300"
+          className="w-full py-3 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-300"
         >
           Update Category
         </button>

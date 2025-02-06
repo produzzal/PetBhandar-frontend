@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import nexiosInstance from "@/config/nexios.config";
 import SimilarProducts from "../../utils/SimilarProducts";
+import { ApiResponse } from "../../utils/interface/product.interface";
+import Link from "next/link";
 
-const ProductDetailsPage = ({ params }) => {
-  const { productId } = React.use(params);
+const ProductDetailsPage = ({ params }: { params: any }) => {
+  const { productId }: { productId: any } = React.use(params);
   const [product, setProduct] = useState<any>(null); // Store the fetched product data
   const [currentImage, setCurrentImage] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1); // Track selected quantity
@@ -19,7 +22,9 @@ const ProductDetailsPage = ({ params }) => {
     const fetchProduct = async () => {
       if (productId) {
         try {
-          const response = await nexiosInstance.get(`/products/${productId}`);
+          const response = await nexiosInstance.get<ApiResponse>(
+            `/products/${productId}`
+          );
           setProduct(response.data.data);
           setCurrentImage(response.data.data.productImages?.[0] || "");
         } catch (error) {
@@ -65,7 +70,7 @@ const ProductDetailsPage = ({ params }) => {
               <div
                 key={index}
                 onClick={() => setCurrentImage(image)}
-                className="w-24 h-24 cursor-pointer border-2 border-transparent hover:border-gray-400 rounded-lg overflow-hidden"
+                className="w-24 h-24 cursor-pointer border-2 border-transparent hover:border-pink-400 rounded-lg overflow-hidden"
               >
                 <Image
                   src={image}
@@ -86,12 +91,13 @@ const ProductDetailsPage = ({ params }) => {
           <p className="text-md my-2  text-[#7B838F]">
             Category <span className="text-pink-500">{product.category}</span>
           </p>
-          <p className="text-xl font-bold text-gray-900 mb-4">
-            BDT {product.price}
+          <p className="text-md md:text-xl my-2 font-bold font-[#1F2937]">
+            <span className="font-extrabold">৳</span>
+            {product.price}
           </p>
           <p className="text-gray-600 mb-6">{product.description}</p>
 
-          <div className="w-1/2 flex justify-between items-center">
+          <div className="w-2/3 flex justify-between items-center">
             <div className="flex items-center gap-4 mb-6">
               <button
                 onClick={() => handleQuantityChange("decrease")}
@@ -108,19 +114,25 @@ const ProductDetailsPage = ({ params }) => {
               </button>
             </div>
 
-            <span className="text-lg  text-[#7B838F] mb-6 md:mr-16">
-              Stock:{" "}
+            <span className="text-lg text-[#7B838F] mb-6 mr-3 md:mr-40">
+              <span>Stock: </span>
               <span className="text-pink-500">{product.stockQuantity}</span>
             </span>
           </div>
 
           <div className="flex items-center gap-6">
-            <button className="rounded bg-blue-700 px-6 py-[10px] text-white hover:bg-blue-600">
+            <Link
+              href="/products"
+              className="rounded bg-pink-600 px-10 py-3 text-white hover:bg-pink-700 transition-all duration-200 cursor-pointer"
+            >
               Buy Now
-            </button>
-            <button className="rounded border-2 border-blue-700 px-4 py-2 text-blue-700 hover:bg-blue-700 hover:text-white transition-all duration-200">
+            </Link>
+            <Link
+              href="/buy"
+              className="w-36 text-center rounded border-1 border-pink-600 px-2 sm:px-4 py-2 md:py-3 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-200"
+            >
               Add to Cart
-            </button>
+            </Link>
           </div>
         </div>
       </div>

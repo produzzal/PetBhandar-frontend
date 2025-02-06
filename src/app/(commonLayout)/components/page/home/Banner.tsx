@@ -36,7 +36,7 @@ const Banner = () => {
             PetBhandar.
           </p>
           <Link href="/products">
-            <button className="mt-6 rounded bg-blue-700 px-4 py-2 text-white hover:bg-blue-600">
+            <button className="rounded bg-pink-600 px-6 py-3 text-white hover:bg-pink-700 transition-all duration-200 cursor-pointer">
               Explore Now
             </button>
           </Link>

@@ -1,26 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState } from "react";
 import nexiosInstance from "@/config/nexios.config";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ApiResponse } from "@/app/(commonLayout)/utils/interface/user.interface";
 
-const UpdateUserRole = ({ params }) => {
-  const { userId } = React.use(params);
-  console.log(userId);
+const UpdateUserRole = ({ params }: { params: any }) => {
+  const { userId }: { userId: any } = React.use(params);
 
   const [role, setRole] = useState("user");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleUpdate = async (e) => {
+  const handleUpdate = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    console.log("Updating role to:", role);
 
     try {
-      const response = await nexiosInstance.put(`/users/${userId}`, { role });
-      console.log(response);
+      const response = await nexiosInstance.put<ApiResponse>(
+        `/users/${userId}`,
+        { role }
+      );
       if (response.status === 200) {
         toast.success(response.data.message);
 
@@ -32,6 +34,7 @@ const UpdateUserRole = ({ params }) => {
       }
     } catch (err) {
       setError("Failed to update user role. Try again.");
+      console.error("failed to update user", err);
     } finally {
       setLoading(false);
     }
@@ -39,7 +42,7 @@ const UpdateUserRole = ({ params }) => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
+      <h1 className="text-xl md:text-3xl font-bold mb-8 text-gray-800">
         Update User Role
       </h1>
 
@@ -61,7 +64,7 @@ const UpdateUserRole = ({ params }) => {
 
         <button
           type="submit"
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
+          className="mt-4 bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700 w-full"
           disabled={loading}
         >
           {loading ? "Updating..." : "Update Role"}

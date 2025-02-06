@@ -1,7 +1,9 @@
 import Image from "next/image";
 import ProductFilter from "../utils/ProductFilter";
 import Link from "next/link";
+import { TProduct } from "../utils/interface/product.interface";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ProductsPage = async ({ searchParams }: { searchParams: any }) => {
   const category = searchParams?.category || "all";
   const searchQuery = searchParams?.search || "";
@@ -30,7 +32,7 @@ const ProductsPage = async ({ searchParams }: { searchParams: any }) => {
 
   return (
     <div className="container mx-auto px-4">
-      <h2 className="text-3xl font-bold text-center my-8 text-gray-800">
+      <h2 className="text-xl md:text-3xl font-bold text-center my-8 text-gray-800">
         Discover the Best Pet Products - Only at PetBhandar!
       </h2>
 
@@ -38,8 +40,8 @@ const ProductsPage = async ({ searchParams }: { searchParams: any }) => {
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12">
         {currentPageProducts.length > 0 ? (
-          currentPageProducts.map((product) => (
-            <Link href={`/products/${product._id}`} key={product.id}>
+          currentPageProducts.map((product: TProduct) => (
+            <Link href={`/products/${product._id}`} key={product._id}>
               <div
                 key={product._id}
                 className="product-card bg-white w-full p-3 md:p-6 rounded-2xl shadow-lg hover:shadow-neutral-400 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer"
@@ -60,20 +62,20 @@ const ProductsPage = async ({ searchParams }: { searchParams: any }) => {
 
                 {/* Product Name */}
                 <div className="flex flex-col flex-grow">
-                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 mb-2 truncate">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[#0A101A] mb-2 truncate">
                     {product.name}
                   </h3>
                 </div>
 
                 {/* Price and Add to Cart Button */}
-                <div className="flex justify-between items-center mt-auto">
-                  <span className="text-sm mt-5 sm:text-base md:text-lg font-bold">
-                    BDT {product.price}
-                  </span>
-                  <button className="mt-4 sm:mt-6 md:mt-7 rounded border-2 border-blue-700 px-2 sm:px-4 py-1 md:py-2 text-blue-700 hover:bg-blue-700 hover:text-white transition-all duration-200">
-                    Add to Cart
-                  </button>
+
+                <div className="text-md md:text-xl mt-3 font-bold font-[#1F2937]">
+                  <span className="font-extrabold">৳</span>
+                  {product.price}
                 </div>
+                <button className="w-full mt-4 rounded border-1 border-pink-600 px-2 sm:px-4 py-2 md:py-3 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-200">
+                  Add to Cart
+                </button>
               </div>
             </Link>
           ))

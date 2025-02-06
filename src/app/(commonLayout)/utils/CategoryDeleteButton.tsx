@@ -13,7 +13,6 @@ const DeleteButton = ({ categoryId }: { categoryId: string }) => {
     setLoading(true);
     try {
       const response = await nexiosInstance.delete(`/categories/${categoryId}`);
-      console.log(response);
 
       if (response.status === 200) {
         toast.success("Category deleted successfully!");
@@ -22,8 +21,8 @@ const DeleteButton = ({ categoryId }: { categoryId: string }) => {
         throw new Error("Failed to delete the category.");
       }
     } catch (error) {
-      console.error("Error deleting category:", error);
       toast.error("Error deleting category");
+      console.error("Error deleting category:", error);
       return false;
     } finally {
       setLoading(false);

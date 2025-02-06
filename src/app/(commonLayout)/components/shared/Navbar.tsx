@@ -1,255 +1,79 @@
-"use client";
-import { useState, useEffect } from "react";
-import Link from "next/link"; // Import Link from Next.js
-import { FaShoppingCart } from "react-icons/fa"; // Import React Icons
-import Image from "next/image";
-import nexiosInstance from "@/config/nexios.config";
+// components/Navbar/Navbar.tsx
+import Link from "next/link";
+import ProfileDropdown from "../../utils/ProfileDropdown";
+import CartButton from "../../utils/CartButton";
+import MobileSearchBar from "../../utils/SearchBarMobile"; // Mobile search bar
+import DesktopSearchBar from "../../utils/SearchBarPc"; // Desktop search bar
 
-const Navbar: React.FC = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>(""); // For search input
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
-
-  // Check if the user is authenticated and their role from localStorage
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setIsAuthenticated(true);
-      setIsAdmin(user.role === "admin");
-    }
-  }, []);
-
-  // Toggle dropdown menu
-  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
-
-  // Close dropdown
-  const closeDropdown = () => setIsDropdownOpen(false);
-
-  // Handle logout
-  const handleLogout = async () => {
-    try {
-      const response = await nexiosInstance.post("/auth/logout", {});
-
-      if (response.status === 200) {
-        localStorage.removeItem("user");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        setIsAuthenticated(false);
-        setIsAdmin(false);
-
-        window.location.href = "/";
-      } else {
-        console.error("Logout failed");
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-
-  // Handle search input
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-  };
-
+const Navbar = () => {
   return (
-    <div className="navbar bg-[#003B95] text-white">
-      {/* Navbar Start */}
-      <div className="navbar-start">
-        {/* Mobile Menu */}
-        <div className="dropdown lg:hidden">
-          <label
-            tabIndex={0}
-            className="btn btn-ghost lg:hidden"
-            onClick={toggleDropdown}
+    <>
+      {/* Mobile Header */}
+      <header className="bg-white text-[#1F2937] shadow-md md:hidden md:sticky top-0 z-50">
+        <div className="container mx-auto flex items-center justify-between px-3 py-2 lg:py-3">
+          {/* Left Section: Logo */}
+          <Link
+            href="/"
+            className="flex items-center gap-1 lg:gap-2 text-2xl font-bold text-black"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          </label>
-          {isDropdownOpen && (
-            <ul
-              className="menu menu-sm dropdown-content mt-3 z-[9999] bg-base-100 rounded-box w-52 p-2 shadow text-black sm:w-56 sm:max-w-[250px] md:w-[320px] lg:w-auto whitespace-normal"
-              onClick={closeDropdown}
-            >
-              <li>
-                <Link
-                  href="/"
-                  className="text-black hover:bg-blue-200 hover:text-white"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products"
-                  className="text-black hover:bg-blue-200 hover:text-white"
-                >
-                  Products
-                </Link>
-              </li>
-            </ul>
-          )}
-        </div>
-        <Link href="/" className="btn btn-ghost text-2xl">
-          PetBhandar
-        </Link>
-      </div>
+            <img
+              src="/favicon.ico"
+              alt="PetBhandar Logo"
+              className="h-16 w-44"
+            />
+          </Link>
 
-      {/* Navbar Center */}
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li>
+          {/* Right Section: Cart and Profile for Mobile */}
+          <div className="flex items-center gap-2 ml-auto">
+            <CartButton />
+            <ProfileDropdown />
+          </div>
+        </div>
+        <MobileSearchBar />
+      </header>
+
+      {/* Desktop Header */}
+      <header className="bg-white shadow-md hidden md:block sticky top-0 z-50">
+        <div className="container mx-auto flex items-center justify-between px-3 py-2 lg:py-3">
+          {/* Left Section: Logo */}
+          <Link
+            href="/"
+            className="flex items-center gap-1 lg:gap-2 text-2xl font-bold text-pink-600"
+          >
+            <img
+              src="/favicon.ico"
+              alt="PetBhandar Logo"
+              className="h-16 w-44"
+            />
+          </Link>
+
+          {/* Desktop Navbar Links */}
+          <nav className="flex mx-auto gap-8 text-lg font-medium">
             <Link
               href="/"
-              className="text-white text-xl font-semibold hover:bg-blue-200 hover:text-white"
+              className="text-black hover:text-gray-200 transition"
             >
               Home
             </Link>
-          </li>
-          <li>
             <Link
               href="/products"
-              className="text-white font-semibold text-xl hover:bg-blue-500 hover:text-white"
+              className="text-black hover:text-gray-200 transition"
             >
               Products
             </Link>
-          </li>
-        </ul>
-      </div>
+          </nav>
 
-      {/* Navbar End */}
-      <div className="navbar-end flex items-center space-x-4">
-        {/* Cart Icon (Always visible) */}
-        <div className="lg:block">
-          <Link href="/cart" className="text-white">
-            <FaShoppingCart className="w-6 h-6" />
-          </Link>
-        </div>
-
-        {/* Search Bar (Visible on mobile and large devices) */}
-        <div className="lg:hidden flex items-center space-x-2">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search"
-            className="input input-bordered text-black h-10 w-24 sm:w-32 lg:w-40" // Short search bar
-          />
-        </div>
-        <div className="hidden lg:flex">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search"
-            className="input input-bordered text-black w-32 sm:w-40 lg:w-48" // Larger search bar on desktop
-          />
-        </div>
-
-        {/* User Authentication */}
-        {isAuthenticated ? (
-          <div className="dropdown dropdown-end">
-            <label
-              tabIndex={0}
-              className="btn btn-ghost btn-circle avatar"
-              onClick={toggleDropdown}
-            >
-              <div className=" rounded-full">
-                <Image
-                  width={20}
-                  height={20}
-                  src="/assets/user.png"
-                  alt="User Avatar"
-                />
-              </div>
-            </label>
-            {isDropdownOpen && (
-              <ul
-                tabIndex={0}
-                className="menu dropdown-content bg-base-100 rounded-box z-[9999] mt-3 w-52 p-2 shadow text-black sm:w-56 sm:max-w-[250px] md:w-[320px] lg:w-auto whitespace-normal"
-                onClick={closeDropdown}
-              >
-                {isAdmin ? (
-                  <>
-                    <li>
-                      <Link
-                        href="/admin/user-management"
-                        className="text-black hover:bg-blue-500 hover:text-white"
-                      >
-                        User Management
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        href="/admin/product-management"
-                        className="text-black hover:bg-blue-500 hover:text-white"
-                      >
-                        Product Management
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        href="/admin/category-management"
-                        className="text-black hover:bg-blue-500 hover:text-white"
-                      >
-                        Category Management
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        href="/admin/order-management"
-                        className="text-black hover:bg-blue-500 hover:text-white"
-                      >
-                        Order and payment Management
-                      </Link>
-                    </li>
-                    <li>
-                      <button onClick={handleLogout} className="btn btn-ghost">
-                        Logout
-                      </button>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li>
-                      <Link
-                        href="/my-bookings"
-                        className="text-black hover:bg-blue-500 hover:text-white"
-                      >
-                        My Bookings
-                      </Link>
-                    </li>
-                    <li>
-                      <button onClick={handleLogout} className="btn btn-ghost">
-                        Logout
-                      </button>
-                    </li>
-                  </>
-                )}
-              </ul>
-            )}
+          {/* Right Section: Search, Cart, Profile for Desktop */}
+          <div className="flex items-center gap-2 ml-auto">
+            {/* Desktop Search Bar */}
+            <DesktopSearchBar />
+            {/* Cart and Profile for Desktop */}
+            <CartButton />
+            <ProfileDropdown />
           </div>
-        ) : (
-          <Link href="/login" className="btn">
-            Login
-          </Link>
-        )}
-      </div>
-    </div>
+        </div>
+      </header>
+    </>
   );
 };
 

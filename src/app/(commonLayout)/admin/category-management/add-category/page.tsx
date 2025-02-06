@@ -1,4 +1,5 @@
 "use client";
+import { ApiResponse } from "@/app/(commonLayout)/utils/interface/category.interface";
 import nexiosInstance from "@/config/nexios.config";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -24,7 +25,10 @@ const AddCategoryForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await nexiosInstance.post("/categories", categoryData);
+      const response = await nexiosInstance.post<ApiResponse>(
+        "/categories",
+        categoryData
+      );
       if (response.status === 200) {
         toast.success(response.data.message);
         setCategoryData({
@@ -37,12 +41,13 @@ const AddCategoryForm: React.FC = () => {
       }
     } catch (err) {
       toast.error("An error occurred while adding the category.");
+      console.error("An error occurred while adding the category", err);
     }
   };
 
   return (
     <div className="max-w-2xl mt-16 mx-auto px-6 py-10 bg-white rounded-lg shadow-xl border border-gray-200">
-      <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
+      <h2 className="text-xl md:text-3xl font-bold  mb-8 text-gray-800">
         Add Category Page
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -107,7 +112,7 @@ const AddCategoryForm: React.FC = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-300"
+          className="w-full py-3 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-300"
         >
           Add Category
         </button>

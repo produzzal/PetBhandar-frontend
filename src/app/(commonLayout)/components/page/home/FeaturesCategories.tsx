@@ -3,23 +3,25 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import nexiosInstance from "@/config/nexios.config";
+import {
+  ApiResponse,
+  TCategory,
+} from "@/app/(commonLayout)/utils/interface/category.interface";
 
 const FeaturedCategories: React.FC = () => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<TCategory[]>([]);
   const [error, setError] = useState<string | null>(null);
-  console.log(categories);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await nexiosInstance.get("/categories", {
-          next: {
-            revalidate: 30,
-          },
+        const response = await nexiosInstance.get<ApiResponse>("/categories", {
+          cache: "force-cache",
         });
         setCategories(response.data.data);
       } catch (err) {
         setError("Failed to load categories.");
+        console.error("Error fetching categories:", err);
       }
     };
 
@@ -30,7 +32,7 @@ const FeaturedCategories: React.FC = () => {
 
   return (
     <div className="py-16">
-      <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
+      <h2 className="text-xl md:text-3xl md:ml-5 font-bold mb-8 text-gray-800">
         Everything Your Pet Needs in Our Featured Categories
       </h2>
       <div className="grid grid-cols-3 gap-5 md:gap-0 md:grid-cols-6 lg:grid-cols-6">

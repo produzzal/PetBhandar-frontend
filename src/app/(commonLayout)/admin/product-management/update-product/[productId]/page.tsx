@@ -1,18 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { ApiResponse } from "@/app/(commonLayout)/utils/interface/category.interface";
 import nexiosInstance from "@/config/nexios.config";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
-const UpdateProductForm: React.FC = ({ params }) => {
-  const { productId } = React.use(params);
+const UpdateProductForm = ({ params }: { params: any }) => {
+  const { productId }: { productId: any } = React.use(params);
   const [categoryNames, setCategoryNames] = useState<string[]>([]);
-  const [product, setProduct] = useState<any>(null); // Use 'any' or define a type for product
-  console.log(productId);
+  const [product, setProduct] = useState<any>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await nexiosInstance.get("/categories", {
+        const response = await nexiosInstance.get<ApiResponse>("/categories", {
           next: {
             revalidate: 30,
           },
@@ -23,13 +24,15 @@ const UpdateProductForm: React.FC = ({ params }) => {
         );
         setCategoryNames(names);
       } catch (err) {
-        console.log("Failed to load categories.");
+        console.error("Failed to load category", err);
       }
     };
 
     const fetchProduct = async () => {
       try {
-        const response = await nexiosInstance.get(`/products/${productId}`);
+        const response = await nexiosInstance.get<ApiResponse>(
+          `/products/${productId}`
+        );
         setProduct(response.data.data); // Set the fetched product data
       } catch (error) {
         console.log("Error fetching product data:", error);
@@ -60,7 +63,7 @@ const UpdateProductForm: React.FC = ({ params }) => {
     };
 
     try {
-      const response = await nexiosInstance.put(
+      const response = await nexiosInstance.put<ApiResponse>(
         `/products/${productId}`,
         productData
       );
@@ -72,8 +75,9 @@ const UpdateProductForm: React.FC = ({ params }) => {
       } else {
         toast.error(response.data.message || "Product update failed");
       }
-    } catch (error) {
+    } catch (err) {
       toast.error("Error updating product");
+      console.error("Error updating product", err);
     }
   };
 
@@ -83,8 +87,8 @@ const UpdateProductForm: React.FC = ({ params }) => {
   }
 
   return (
-    <div className="max-w-2xl mt-16 mx-auto px-6 py-10 bg-white rounded-lg shadow-xl border border-gray-200">
-      <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
+    <div className="max-w-2xl mt-16 mx-auto px-6 py-10 bg-white rounded-lg mb-10 shadow-xl border border-gray-200">
+      <h2 className="text-xl md:text-3xl font-bold  mb-8 text-gray-800">
         Update Product Page
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -201,7 +205,7 @@ const UpdateProductForm: React.FC = ({ params }) => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-300"
+          className="w-full py-3 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2 transition ease-in-out duration-300"
         >
           Update Product
         </button>

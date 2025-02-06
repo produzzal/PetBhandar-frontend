@@ -1,4 +1,5 @@
 "use client";
+import { ApiResponse } from "@/app/(commonLayout)/utils/interface/category.interface";
 import nexiosInstance from "@/config/nexios.config";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -9,7 +10,7 @@ const AddProductForm: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await nexiosInstance.get("/categories", {
+        const response = await nexiosInstance.get<ApiResponse>("/categories", {
           next: {
             revalidate: 30,
           },
@@ -20,7 +21,7 @@ const AddProductForm: React.FC = () => {
         );
         setCategoryNames(names);
       } catch (err) {
-        console.log("Failed to load categories.");
+        console.error("Failed to load categories", err);
       }
     };
 
@@ -48,8 +49,10 @@ const AddProductForm: React.FC = () => {
 
     // add product in backend
 
-    const response = await nexiosInstance.post("/products", productData);
-    console.log("res", response);
+    const response = await nexiosInstance.post<ApiResponse>(
+      "/products",
+      productData
+    );
     if (response.status === 200) {
       toast.success(response.data.message);
       form.reset();
@@ -59,8 +62,8 @@ const AddProductForm: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mt-16 mx-auto px-6 py-10 bg-white rounded-lg shadow-xl border border-gray-200">
-      <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
+    <div className="max-w-2xl mt-16 mx-auto px-6 py-10 bg-white rounded-lg shadow-xl mb-10 border border-gray-200">
+      <h2 className="text-xl md:text-3xl font-bold mb-8 text-gray-800">
         Add Product Page
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -177,7 +180,7 @@ const AddProductForm: React.FC = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-300"
+          className="w-full py-3 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2  transition ease-in-out duration-300"
         >
           Add Product
         </button>

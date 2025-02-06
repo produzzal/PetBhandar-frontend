@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ProductFilter from "@/app/(commonLayout)/utils/ProductFilter";
-import nexiosInstance from "@/config/nexios.config";
 import Image from "next/image";
 import Link from "next/link";
 import DeleteButton from "../../utils/ProductDeleteButton";
+import { TProduct } from "../../utils/interface/product.interface";
 
 const ProductManagement = async ({ searchParams }: { searchParams: any }) => {
   const category = searchParams?.category || "all";
@@ -20,29 +21,28 @@ const ProductManagement = async ({ searchParams }: { searchParams: any }) => {
 
   const response = await fetch(apiUrl);
   const data = await response.json();
-  const products = data.data || [];
+  const products: TProduct[] = data.data || [];
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 mb-10">
       {/* Title */}
-      <h2 className="text-3xl font-bold text-center my-8 text-gray-800">
+      <h2 className="text-3xl font-bold  my-8 text-gray-800">
         Products Management
       </h2>
-      <ProductFilter />
 
       {/* Add Product Button */}
-      <div className="flex justify-center mb-6">
+      <div className="w-full mb-6">
         <Link href="/admin/product-management/add-product">
-          <button className="bg-blue-500 text-white px-32 md:px-64 py-3 rounded-lg shadow-md hover:bg-blue-600 transition">
+          <button className="bg-pink-600 w-full text-white px-36 md:px-96 py-3 rounded-lg shadow-md hover:bg-pink-700 transition">
             Add Product
           </button>
         </Link>
       </div>
-
+      <ProductFilter />
       {/* Product List */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-10">
         {products.length > 0 ? (
-          products.map((product) => (
+          products.map((product: TProduct) => (
             <div
               key={product._id}
               className="product-card bg-white w-full p-3 md:p-6 rounded-2xl shadow-lg hover:shadow-neutral-400 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer"
@@ -61,22 +61,21 @@ const ProductManagement = async ({ searchParams }: { searchParams: any }) => {
 
               {/* Product Details */}
               <div className="flex flex-col flex-grow">
-                <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 mb-2 truncate">
+                <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[#0A101A] mb-2 truncate">
                   {product.name}
                 </h3>
-                <p className="text-gray-800 text-xs sm:text-sm md:text-base font-medium mb-2">
-                  <span className="font-bold">Category:</span>{" "}
-                  {product.category}
+                <p className="text-md my-2  text-gray-700">
+                  Category:{" "}
+                  <span className="text-pink-500">{product.category}</span>
                 </p>
-                <p className="text-gray-700 text-xs sm:text-sm md:text-base font-medium mb-2 truncate">
-                  <span className="font-semibold">Description:</span>{" "}
-                  {product.description}
+                <p className="text-lg text-gray-700 ">
+                  <span>Stock: </span>
+                  <span className="text-pink-500">{product.stockQuantity}</span>
                 </p>
-                <p className="text-sm sm:text-base md:text-md font-bold">
-                  Stock: {product.stockQuantity}
-                </p>
-                <p className="text-sm mt-2 sm:text-base md:text-lg font-bold">
-                  Price: BDT {product.price}
+
+                <p className="text-md md:text-xl mt-3 font-bold font-[#1F2937]">
+                  <span className="font-extrabold">৳</span>
+                  {product.price}
                 </p>
               </div>
 
@@ -85,7 +84,7 @@ const ProductManagement = async ({ searchParams }: { searchParams: any }) => {
                 <Link
                   href={`/admin/product-management/update-product/${product._id}`}
                 >
-                  <button className="bg-yellow-500 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-600 transition-all duration-200">
+                  <button className="bg-green-500 text-white px-3 sm:px-4 py-2 rounded hover:bg-green-600 transition-all duration-200">
                     Update
                   </button>
                 </Link>

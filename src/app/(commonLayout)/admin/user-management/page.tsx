@@ -1,14 +1,15 @@
 "use client";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import nexiosInstance from "@/config/nexios.config";
 import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ApiResponse, TUser } from "../../utils/interface/user.interface";
 
 const UserManagement = () => {
   // State to store users and loading/error states
-  const [users, setUsers] = useState([]);
-  console.log("su", users);
+  const [users, setUsers] = useState<TUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -16,12 +17,13 @@ const UserManagement = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await nexiosInstance.get("/users", {
+        const response = await nexiosInstance.get<ApiResponse>("/users", {
           cache: "no-store",
         });
         setUsers(response.data.data); // Set users data
       } catch (err) {
         setError("Failed to load users");
+        console.error("Failed to fetch users", err);
       } finally {
         setLoading(false); // Stop loading state
       }
@@ -31,7 +33,8 @@ const UserManagement = () => {
   }, []);
 
   // Handle delete user
-  const handleDelete = (userId) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleDelete = (userId: any) => {
     // Create a toast reference to control its dismissal
     const toastId = toast.info(
       <div className="flex flex-col items-center justify-center space-y-4">
@@ -42,7 +45,7 @@ const UserManagement = () => {
           <button
             onClick={async () => {
               try {
-                const response = await nexiosInstance.delete(
+                const response = await nexiosInstance.delete<ApiResponse>(
                   `/users/${userId}`
                 );
                 if (response.status === 200) {
@@ -88,7 +91,7 @@ const UserManagement = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-xl md:text-3xl font-bold text-center mb-8 text-gray-800">
+      <h2 className="text-xl md:text-3xl font-bold mb-8 text-gray-800">
         User Management
       </h2>
       <div className="overflow-x-auto">
@@ -102,27 +105,27 @@ const UserManagement = () => {
               <th className="py-3 px-6 text-center">Actions</th>
             </tr>
           </thead>
-          <tbody className="text-gray-600 text-sm">
+          <tbody className="text-[#0A101A] text-md">
             {users.map((user) => (
               <tr
                 key={user._id}
                 className="border-b border-gray-200 hover:bg-gray-100"
               >
-                <td className="py-3 px-6">{user.name}</td>
+                <td className="py-3 px-6 whitespace-nowrap">{user.name}</td>
                 <td className="py-3 px-6">{user.email}</td>
                 <td className="py-3 px-6">{user.phone}</td>
                 <td className="py-3 px-6">{user.role}</td>
-                <td className="py-3 px-6 text-center space-y-2 sm:space-y-0 sm:space-x-2">
+                <td className="py-3 px-6 text-center flex justify-center items-center gap-1">
                   <Link href={`/admin/user-management/user/${user._id}`}>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full sm:w-auto">
-                      Update
+                    <button className="bg-green-500 text-white p-2 rounded hover:bg-green-600 w-9">
+                      <FaEdit className="text-white" size={20} />
                     </button>
                   </Link>
                   <button
                     onClick={() => handleDelete(user._id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full sm:w-auto"
+                    className="bg-red-500 text-white p-2 rounded hover:bg-red-600 w-9"
                   >
-                    Delete
+                    <FaTrashAlt className="text-white" size={20} />
                   </button>
                 </td>
               </tr>

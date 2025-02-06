@@ -2,26 +2,26 @@ import React from "react";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#003B95] text-white py-12">
+    <footer className="bg-white text-gray-700 py-12 border-1 hover:border-2 mt-20">
       <div className="container mx-auto px-6 sm:px-8 lg:px-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
           {/* Contact Information */}
           <div className="space-y-6 text-left sm:text-left lg:text-left">
-            <h3 className="text-2xl font-bold text-[#F1F1F1]">
+            <h3 className="text-2xl font-bold text-[#1F2A3B]">
               Contact Information
             </h3>
             <p className="text-lg">
               Email:{" "}
               <a
                 href="mailto:support@roomsync.com"
-                className="hover:text-[#F1F1F1]"
+                className="hover:text-[#1F2A3B]"
               >
                 support@petbhandar.com
               </a>
             </p>
             <p className="text-lg">
               Phone:{" "}
-              <a href="tel:+1234567890" className="hover:text-[#F1F1F1]">
+              <a href="tel:+1234567890" className="hover:text-[#1F2A3B]">
                 +880 1865701039
               </a>
             </p>
@@ -30,13 +30,13 @@ const Footer: React.FC = () => {
 
           {/* Social Media Links */}
           <div className="space-y-6 text-left sm:text-left lg:text-left">
-            <h3 className="text-2xl font-bold text-[#F1F1F1]">Follow Us</h3>
+            <h3 className="text-2xl font-bold text-[#1F2A3B]">Follow Us</h3>
             <div className="flex justify-start space-x-6 flex-wrap">
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#F1F1F1] hover:text-[#F1F1F1] transition-all duration-300"
+                className="text-[#1F2A3B] hover:text-[#1F2A3B] transition-all duration-300"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#F1F1F1] hover:text-[#F1F1F1] transition-all duration-300"
+                className="text-[#1F2A3B] hover:text-[#1F2A3B] transition-all duration-300"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#F1F1F1] hover:text-[#F1F1F1] transition-all duration-300"
+                className="text-[#1F2A3B] hover:text-[#1F2A3B] transition-all duration-300"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -82,12 +82,12 @@ const Footer: React.FC = () => {
 
           {/* Additional Links */}
           <div className="space-y-6 text-left sm:text-left lg:text-left">
-            <h3 className="text-2xl font-bold text-[#F1F1F1]">Quick Links</h3>
+            <h3 className="text-2xl font-bold text-[#1F2A3B]">Quick Links</h3>
             <ul className="space-y-2 text-lg">
               <li>
                 <a
                   href="/privacy-policy"
-                  className="hover:underline hover:text-[#F1F1F1] transition-all duration-300"
+                  className="hover:underline hover:text-[#1F2A3B] transition-all duration-300"
                 >
                   Privacy Policy
                 </a>
@@ -95,7 +95,7 @@ const Footer: React.FC = () => {
               <li>
                 <a
                   href="/terms-of-service"
-                  className="hover:underline hover:text-[#F1F1F1] transition-all duration-300"
+                  className="hover:underline hover:text-[#1F2A3B] transition-all duration-300"
                 >
                   Terms of Service
                 </a>
@@ -103,7 +103,7 @@ const Footer: React.FC = () => {
               <li>
                 <a
                   href="/contact-us"
-                  className="hover:underline hover:text-[#F1F1F1] transition-all duration-300"
+                  className="hover:underline hover:text-[#1F2A3B] transition-all duration-300"
                 >
                   Contact Us
                 </a>
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-8 text-center text-sm text-[#F1F1F1]">
+        <div className="mt-8 text-center text-sm text-[#1F2A3B]">
           <p>&copy; 2025 PetBhandar. All rights reserved.</p>
         </div>
       </div>

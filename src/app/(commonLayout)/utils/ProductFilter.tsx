@@ -3,6 +3,7 @@
 import nexiosInstance from "@/config/nexios.config";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ApiResponse } from "./interface/product.interface";
 
 const ProductFilter = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const ProductFilter = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await nexiosInstance.get("/categories", {
+        const response = await nexiosInstance.get<ApiResponse>("/categories", {
           next: {
             revalidate: 30,
           },
@@ -28,6 +29,7 @@ const ProductFilter = () => {
         setCategoryNames(names);
       } catch (err) {
         console.log("Failed to load categories.");
+        console.error("Failed to load", err);
       }
     };
 
@@ -57,21 +59,21 @@ const ProductFilter = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-center gap-4 mb-6">
+    <div className="flex flex-col md:flex-row gap-4 mb-6">
       {/* 🔍 Live Search Input */}
       <input
         type="text"
         placeholder="Search products..."
         defaultValue={searchQuery}
         onChange={handleSearchChange}
-        className="p-2 border border-gray-300 rounded w-full md:w-1/3"
+        className="w-ful md:w-1/2 p-2 border border-gray-300 rounded"
       />
 
       {/* 🏷 Instant Category Filter */}
       <select
         defaultValue={selectedCategory}
         onChange={handleCategoryChange}
-        className="p-2 border border-gray-300 rounded w-full md:w-1/4"
+        className="p-2 border border-gray-300 rounded w-full md:w-1/2"
       >
         <option value="all">All Categories</option>
         {categoryNames.map((category) => (

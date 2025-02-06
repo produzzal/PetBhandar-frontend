@@ -2,22 +2,26 @@ import Image from "next/image";
 import nexiosInstance from "@/config/nexios.config";
 import Link from "next/link";
 import DeleteButton from "../../utils/CategoryDeleteButton";
+import {
+  ApiResponse,
+  TCategory,
+} from "../../utils/interface/category.interface";
 
 const CategoryManagement = async () => {
-  const response = await nexiosInstance.get("/categories");
-  const categories = response.data.data;
+  const response = await nexiosInstance.get<ApiResponse>("/categories");
+  const categories: TCategory[] = response.data.data;
 
   return (
     <div className="container mx-auto px-4 mb-10">
       {/* Title */}
-      <h2 className="text-3xl font-bold text-center my-8 text-gray-800">
+      <h2 className="text-3xl font-bold my-8 text-gray-800">
         Category Management
       </h2>
 
       {/* Add Category Button */}
-      <div className="flex justify-center mb-6">
+      <div className=" mb-6">
         <Link href="/admin/category-management/add-category">
-          <button className="bg-blue-500 text-white px-32 md:px-64 py-3 rounded-lg shadow-md hover:bg-blue-600 transition">
+          <button className="bg-pink-500 text-white px-32 w-full py-3 rounded-lg shadow-md hover:bg-pink-600 transition">
             Add Category
           </button>
         </Link>
@@ -28,7 +32,7 @@ const CategoryManagement = async () => {
         {categories.length > 0 ? (
           categories.map((category) => (
             <div
-              key={category.id}
+              key={category._id}
               className="bg-white w-full p-3 md:p-6 rounded-2xl shadow-lg hover:shadow-neutral-400 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer"
             >
               {/* Category Image with Zoom Effect */}
@@ -45,11 +49,10 @@ const CategoryManagement = async () => {
 
               {/* Category Details */}
               <div className="flex flex-col flex-grow">
-                <h3 className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 mb-2 truncate">
+                <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[#0A101A] mb-2 ">
                   {category.name}
                 </h3>
                 <p className="text-gray-700 text-xs sm:text-sm md:text-base font-medium mb-2 truncate">
-                  <span className="font-semibold">Description:</span>{" "}
                   {category.description}
                 </p>
               </div>
@@ -59,7 +62,7 @@ const CategoryManagement = async () => {
                 <Link
                   href={`/admin/category-management/update-category/${category._id}`}
                 >
-                  <button className="bg-yellow-500 text-white px-3 sm:px-4 py-2 rounded hover:bg-yellow-600 transition-all duration-200">
+                  <button className="bg-green-500 text-white px-3 sm:px-4 py-2 rounded hover:bg-green-600 transition-all duration-200">
                     Update
                   </button>
                 </Link>
