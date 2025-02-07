@@ -27,7 +27,8 @@ const AddToCartPopup = ({
     );
   };
 
-  const userId = JSON.parse(localStorage.getItem("user") as string);
+  const user = JSON.parse(localStorage.getItem("user") as string);
+  const userId = user._id;
 
   const handleAddToCart = async (productId: string, quantity: number) => {
     try {

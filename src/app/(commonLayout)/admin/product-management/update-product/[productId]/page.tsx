@@ -35,7 +35,7 @@ const UpdateProductForm = ({ params }: { params: any }) => {
         );
         setProduct(response.data.data); // Set the fetched product data
       } catch (error) {
-        console.log("Error fetching product data:", error);
+        console.error("Error fetching product data:", error);
       }
     };
 
@@ -57,6 +57,9 @@ const UpdateProductForm = ({ params }: { params: any }) => {
       name: formData.get("name"),
       description: formData.get("description"),
       price: parseFloat(formData.get("price") as string),
+      discount: formData.get("discount")
+        ? parseFloat(formData.get("discount") as string)
+        : undefined,
       stockQuantity: parseInt(formData.get("stockQuantity") as string, 10),
       category: formData.get("category"),
       productImages: imageLinks,
@@ -141,6 +144,25 @@ const UpdateProductForm = ({ params }: { params: any }) => {
             defaultValue={product.price}
             className="w-full p-4 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-300 hover:border-blue-500"
             min={0}
+          />
+        </div>
+        {/* Discount Field */}
+        <div>
+          <label
+            htmlFor="discount"
+            className="block text-lg font-semibold text-gray-700"
+          >
+            Discount (%)
+          </label>
+          <input
+            type="number"
+            id="discount"
+            name="discount"
+            defaultValue={product.discount}
+            className="w-full p-4 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-300 hover:border-blue-500"
+            min={0}
+            max={100}
+            placeholder="Enter discount percentage (optional)"
           />
         </div>
 

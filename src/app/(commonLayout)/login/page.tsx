@@ -27,7 +27,7 @@ const page = () => {
 
       if (response.status === 200) {
         toast.success(result.message);
-        localStorage.setItem("user", JSON.stringify(result.data._id));
+        localStorage.setItem("user", JSON.stringify(result.data));
 
         // Redirect to the provided redirect URL or default to home page after a successful login
         setTimeout(() => {

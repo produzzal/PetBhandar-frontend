@@ -53,49 +53,73 @@ const FeaturedProducts = () => {
         </h2>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {featuresProducts.slice(0, 8).map((product) => (
-            <div
-              key={product._id}
-              className="product-card bg-white w-full p-3 md:p-6 rounded-2xl shadow-lg hover:shadow-neutral-400 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer"
-            >
-              {/* Link for Image and Product Name */}
-              <Link href={`/products/${product._id}`}>
-                <div>
-                  {/* Image with Zoom Effect */}
-                  <div className="w-full h-40 sm:h-52 md:h-52 relative mb-4 overflow-hidden">
-                    <Image
-                      src={product.productImages[0]}
-                      alt={product.name}
-                      width={600}
-                      height={208}
-                      unoptimized
-                      className="object-cover w-full h-full rounded-xl transition-transform duration-300 transform hover:scale-110"
-                    />
-                  </div>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+          {featuresProducts.slice(0, 8).map((product: TProduct) => {
+            const price = product.price;
+            const discount = product.discount || 0;
+            const final =
+              discount > 0 ? price - (price * discount) / 100 : price;
+            const finalPrice = Math.floor(final);
 
-                  {/* Product Name */}
-                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[#0A101A] mb-2 truncate">
-                    {product.name}
-                  </h3>
-                </div>
-              </Link>
-
-              {/* Price and Add to Cart Button */}
-              <div className="text-md md:text-xl mt-3 font-bold font-[#1F2937]">
-                <span className="font-extrabold">৳</span>
-                {product.price}
-              </div>
-
-              {/* Add to Cart Button - Prevents Link Navigation */}
-              <button
-                onClick={(e) => handleAddToCartClick(e, product)}
-                className="w-full mt-4 rounded border-1 border-pink-600 px-2 sm:px-4 py-2 md:py-3 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-200"
+            return (
+              <div
+                key={product._id}
+                className="product-card bg-white w-full p-2 md:p-6 rounded-2xl shadow-lg hover:shadow-neutral-400 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer"
               >
-                Add to Cart
-              </button>
-            </div>
-          ))}
+                {/* Link for Image and Product Name */}
+                <Link href={`/products/${product._id}`}>
+                  <div>
+                    {/* Image with Zoom Effect */}
+                    <div className="w-full h-40 sm:h-52 md:h-52 relative mb-4 overflow-hidden">
+                      <Image
+                        src={product.productImages[0]}
+                        alt={product.name}
+                        width={600}
+                        height={208}
+                        unoptimized
+                        className="object-cover w-full h-full rounded-xl transition-transform duration-300 transform hover:scale-110"
+                      />
+                    </div>
+
+                    {/* Product Name */}
+                    <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[#0A101A] mb-2 truncate">
+                      {product.name}
+                    </h3>
+                  </div>
+                </Link>
+
+                {/* Price with Discount Logic */}
+                <div className="mt-3">
+                  {discount > 0 ? (
+                    <p className="text-md md:text-xl mt-3 font-bold font-[#1F2937]">
+                      <span className="font-extrabold text-[#1F2937]">৳</span>
+                      {finalPrice}
+                      <span className="line-through mx-1 md:mx-2 text-gray-400">
+                        <span className="font-extrabold ml-1 md:ml-2">৳</span>
+                        {price}
+                      </span>
+                      <span className="text-white font-normal text-sm bg-yellow-500 p-1 rounded">
+                        {discount}% OFF
+                      </span>
+                    </p>
+                  ) : (
+                    <p className="text-md md:text-xl mt-3 font-bold text-[#1F2937]">
+                      <span className="font-extrabold">৳</span>
+                      {price}
+                    </p>
+                  )}
+                </div>
+
+                {/* Add to Cart Button - Prevents Link Navigation */}
+                <button
+                  onClick={(e) => handleAddToCartClick(e, product)}
+                  className="w-full mt-4 rounded border-1 border-pink-600 px-2 sm:px-4 py-2 md:py-3 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-200"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            );
+          })}
         </div>
 
         {/* See More Products Button */}
