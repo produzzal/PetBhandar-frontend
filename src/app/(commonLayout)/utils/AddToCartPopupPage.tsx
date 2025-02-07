@@ -1,6 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { addToCart } from "./Cart/AddToCart";
+import { toast, ToastContainer } from "react-toastify";
+import { TCart } from "./interface/cart.interface";
 
 const AddToCartPopup = ({
   product,
@@ -22,6 +25,31 @@ const AddToCartPopup = ({
         ? prev - 1
         : prev
     );
+  };
+
+  const userId = JSON.parse(localStorage.getItem("user") as string);
+
+  const handleAddToCart = async (productId: string, quantity: number) => {
+    try {
+      // Check if userId is available (i.e., the user is logged in)
+      if (!userId) {
+        toast.error("Please login to add product to cart");
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
+        return;
+      }
+
+      // Proceed with adding to cart
+      const result = await addToCart(userId, productId, quantity);
+      if (result.success === true) {
+        toast.success("Product added to cart successfully");
+      } else {
+        toast.error("Failed to add product to cart");
+      }
+    } catch (error) {
+      console.error("Failed to add item to cart:", error);
+    }
   };
 
   return (
@@ -120,7 +148,9 @@ const AddToCartPopup = ({
                 Buy Now
               </button>
               <button
-                onClick={() => {}}
+                onClick={() => {
+                  handleAddToCart(product._id, quantity);
+                }}
                 className="w-36 text-center rounded border border-pink-600 px-4 py-3 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-200"
               >
                 Add to Cart
@@ -129,6 +159,7 @@ const AddToCartPopup = ({
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

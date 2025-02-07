@@ -1,35 +1,74 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import ProductFilter from "../utils/ProductFilter";
 import Link from "next/link";
 import { TProduct } from "../utils/interface/product.interface";
+import AddToCartPopup from "../utils/AddToCartPopupPage";
+import { useSearchParams } from "next/navigation";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ProductsPage = async ({ searchParams }: { searchParams: any }) => {
-  const category = searchParams?.category || "all";
-  const searchQuery = searchParams?.search || "";
-  const page = parseInt(searchParams?.page) || 1; // Default to page 1 if not provided
-  const limit = 40; // Number of products per page
+const ProductsPage = () => {
+  const searchParams = useSearchParams(); // ✅ Correct way to access URL params in a Client Component
+  const category = searchParams.get("category") || "all";
+  const searchQuery = searchParams.get("search") || "";
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const limit = 40;
 
-  let apiUrl = `http://localhost:5000/api/products`;
-  const queryParams = new URLSearchParams();
+  const [products, setProducts] = useState<TProduct[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<TProduct | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  if (category !== "all") queryParams.append("category", category);
-  if (searchQuery) queryParams.append("search", searchQuery);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-  if (queryParams.toString()) {
-    apiUrl += `?${queryParams.toString()}`;
-  }
+        let apiUrl = `http://localhost:5000/api/products`;
+        const queryParams = new URLSearchParams();
 
-  const response = await fetch(apiUrl);
-  const data = await response.json();
-  const allProducts = data.data || []; // Get all products
-  const totalProducts = allProducts.length; // Total number of products
-  const totalPages = Math.ceil(totalProducts / limit); // Calculate total pages
+        if (category !== "all") queryParams.append("category", category);
+        if (searchQuery) queryParams.append("search", searchQuery);
 
-  // Paginate products based on current page
-  const startIndex = (page - 1) * limit;
-  const currentPageProducts = allProducts.slice(startIndex, startIndex + limit);
+        if (queryParams.toString()) {
+          apiUrl += `?${queryParams.toString()}`;
+        }
 
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Failed to fetch products");
+
+        const data = await response.json();
+        const allProducts = data.data || [];
+
+        setTotalPages(Math.ceil(allProducts.length / limit));
+        setProducts(allProducts.slice((page - 1) * limit, page * limit));
+      } catch (err: any) {
+        setError(err.message || "Something went wrong!");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [category, searchQuery, page]);
+
+  const handleAddToCartClick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    product: TProduct
+  ) => {
+    e.stopPropagation(); // Prevent navigation
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
   return (
     <div className="container mx-auto px-4">
       <h2 className="text-xl md:text-3xl font-bold text-center my-8 text-gray-800">
@@ -38,87 +77,111 @@ const ProductsPage = async ({ searchParams }: { searchParams: any }) => {
 
       <ProductFilter />
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12">
-        {currentPageProducts.length > 0 ? (
-          currentPageProducts.map((product: TProduct) => (
-            <Link href={`/products/${product._id}`} key={product._id}>
-              <div
-                key={product._id}
-                className="product-card bg-white w-full p-3 md:p-6 rounded-2xl shadow-lg hover:shadow-neutral-400 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer"
-              >
-                {/* Image with Zoom Effect */}
-                <div className="w-full h-40 sm:h-52 md:h-52 relative mb-4 overflow-hidden">
-                  {" "}
-                  {/* Decreased height on mobile */}
-                  <Image
-                    src={product.productImages[0]}
-                    alt={product.name}
-                    width={600}
-                    height={208}
-                    unoptimized
-                    className="object-cover w-full h-full rounded-xl transition-transform duration-300 transform hover:scale-110"
-                  />
-                </div>
-
-                {/* Product Name */}
-                <div className="flex flex-col flex-grow">
+      {loading ? (
+        <p className="text-center text-gray-500 mt-6">Loading products...</p>
+      ) : error ? (
+        <p className="text-center text-red-500 mt-6">{error}</p>
+      ) : products.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12">
+          {products.map((product) => (
+            <div
+              key={product._id}
+              className="product-card bg-white w-full p-3 md:p-6 rounded-2xl shadow-lg hover:shadow-neutral-400 transition-all duration-300 flex flex-col justify-between h-full cursor-pointer"
+            >
+              <Link href={`/products/${product._id}`}>
+                <div>
+                  <div className="w-full h-40 sm:h-52 md:h-52 relative mb-4 overflow-hidden">
+                    <Image
+                      src={product.productImages[0]}
+                      alt={product.name}
+                      width={600}
+                      height={208}
+                      unoptimized
+                      className="object-cover w-full h-full rounded-xl transition-transform duration-300 transform hover:scale-110"
+                    />
+                  </div>
                   <h3 className="text-base sm:text-lg md:text-xl font-semibold text-[#0A101A] mb-2 truncate">
                     {product.name}
                   </h3>
                 </div>
+              </Link>
 
-                {/* Price and Add to Cart Button */}
-
-                <div className="text-md md:text-xl mt-3 font-bold font-[#1F2937]">
-                  <span className="font-extrabold">৳</span>
-                  {product.price}
-                </div>
-                <button className="w-full mt-4 rounded border-1 border-pink-600 px-2 sm:px-4 py-2 md:py-3 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-200">
-                  Add to Cart
-                </button>
+              <div className="text-md md:text-xl mt-3 font-bold font-[#1F2937]">
+                <span className="font-extrabold">৳</span>
+                {product.price}
               </div>
-            </Link>
-          ))
-        ) : (
-          <p className="text-center text-gray-500 col-span-full">
-            No products found.
-          </p>
-        )}
-      </div>
+
+              <button
+                onClick={(e) => handleAddToCartClick(e, product)}
+                className="w-full mt-4 rounded border-1 border-pink-600 px-2 sm:px-4 py-2 md:py-3 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-200"
+              >
+                Add to Cart
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-center text-gray-500 col-span-full">
+          No products found.
+        </p>
+      )}
 
       {/* Pagination Controls */}
-      <div className="flex justify-center mt-8">
-        {/* Previous Button */}
-        <Link
-          href={`/products?category=${category}&search=${searchQuery}&page=${
-            page - 1
-          }`}
-          className={`px-4 py-2 bg-blue-600 text-white rounded-l-lg ${
-            page === 1 ? "cursor-not-allowed opacity-50" : ""
-          }`}
-          passHref
-        >
-          Previous
-        </Link>
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-8">
+          {page > 1 ? (
+            <Link
+              href={`/products?category=${category}&search=${searchQuery}&page=${
+                page - 1
+              }`}
+              className="px-4 py-2 bg-blue-600 text-white rounded-l-lg"
+            >
+              Previous
+            </Link>
+          ) : (
+            <span className="px-4 py-2 bg-gray-300 text-gray-600 rounded-l-lg cursor-not-allowed">
+              Previous
+            </span>
+          )}
 
-        {/* Current Page */}
-        <span className="px-4 py-2">
-          {page} / {totalPages}
-        </span>
+          <span className="px-4 py-2">
+            {page} / {totalPages}
+          </span>
 
-        {/* Next Button */}
-        <Link
-          href={`/products?category=${category}&search=${searchQuery}&page=${
-            page + 1
-          }`}
-          className={`px-4 py-2 bg-blue-600 text-white rounded-r-lg ${
-            page === totalPages ? "cursor-not-allowed opacity-50" : ""
-          }`}
-          passHref
-        >
-          Next
-        </Link>
-      </div>
+          {page < totalPages ? (
+            <Link
+              href={`/products?category=${category}&search=${searchQuery}&page=${
+                page + 1
+              }`}
+              className="px-4 py-2 bg-blue-600 text-white rounded-r-lg"
+            >
+              Next
+            </Link>
+          ) : (
+            <span className="px-4 py-2 bg-gray-300 text-gray-600 rounded-r-lg cursor-not-allowed">
+              Next
+            </span>
+          )}
+        </div>
+      )}
+      {/* Full-Screen Modal */}
+      {isModalOpen && selectedProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-[100] backdrop-blur-sm">
+          {/* Modal Content */}
+          <div className="relative bg-white p-6 rounded-lg w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 shadow-2xl">
+            {/* Close Button */}
+            <button
+              onClick={closeModal}
+              className="absolute top-3 right-3 bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
+            >
+              ✕
+            </button>
+
+            {/* Add to Cart Popup */}
+            <AddToCartPopup product={selectedProduct} onClose={closeModal} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

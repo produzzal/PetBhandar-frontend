@@ -24,11 +24,10 @@ const page = () => {
     try {
       const response = await nexiosInstance.post("/auth/login", data);
       const result = response.data;
-      console.log(result.token);
 
       if (response.status === 200) {
         toast.success(result.message);
-        localStorage.setItem("user", JSON.stringify(result.data));
+        localStorage.setItem("user", JSON.stringify(result.data._id));
 
         // Redirect to the provided redirect URL or default to home page after a successful login
         setTimeout(() => {

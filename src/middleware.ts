@@ -50,6 +50,9 @@ export async function middleware(request: NextRequest) {
   if (role === "admin" && pathname === "/admin/order-management") {
     return NextResponse.next();
   }
+  if (role === "user" && pathname === "/cart") {
+    return NextResponse.next();
+  }
 
   // Default redirect if the user doesn't have the correct role
   return NextResponse.redirect(new URL("/", request.url));

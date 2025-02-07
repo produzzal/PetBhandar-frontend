@@ -28,7 +28,6 @@ const ProductFilter = () => {
         );
         setCategoryNames(names);
       } catch (err) {
-        console.log("Failed to load categories.");
         console.error("Failed to load", err);
       }
     };
@@ -66,14 +65,14 @@ const ProductFilter = () => {
         placeholder="Search products..."
         defaultValue={searchQuery}
         onChange={handleSearchChange}
-        className="w-ful md:w-1/2 p-2 border border-gray-300 rounded"
+        className="w-full md:w-1/2 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-pink-50"
       />
 
       {/* 🏷 Instant Category Filter */}
       <select
         defaultValue={selectedCategory}
         onChange={handleCategoryChange}
-        className="p-2 border border-gray-300 rounded w-full md:w-1/2"
+        className="p-2 border border-gray-300 rounded w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-pink-50"
       >
         <option value="all">All Categories</option>
         {categoryNames.map((category) => (

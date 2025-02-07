@@ -7,18 +7,7 @@ const nexiosInstance = new Nexios({
   headers: {
     "Content-Type": "application/json",
   },
+  // You can log headers for debugging purposes:
 });
-
-// Request Interceptor
-nexiosInstance.interceptors.request.use(
-  (config) => {
-    // No need to manually extract the token as it's automatically sent with the request
-    console.log("Request sent with credentials (cookies)"); // Confirming the credentials will be sent
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 export default nexiosInstance;
