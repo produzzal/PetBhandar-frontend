@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { addToCart } from "./Cart/AddToCart";
 import { toast, ToastContainer } from "react-toastify";
-import { TCart } from "./interface/cart.interface";
 
 const AddToCartPopup = ({
   product,
