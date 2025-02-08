@@ -6,6 +6,8 @@ import nexiosInstance from "@/config/nexios.config";
 import SimilarProducts from "../../utils/SimilarProducts";
 import { ApiResponse } from "../../utils/interface/product.interface";
 import Link from "next/link";
+import { addToCart } from "../../utils/Cart/AddToCart";
+import { toast, ToastContainer } from "react-toastify";
 
 const ProductDetailsPage = ({ params }: { params: any }) => {
   const { productId }: { productId: any } = React.use(params);
@@ -44,6 +46,33 @@ const ProductDetailsPage = ({ params }: { params: any }) => {
         ? prev - 1
         : prev
     );
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const user = localStorage.getItem("user");
+      const userId = user ? JSON.parse(user)._id : null;
+
+      if (!userId) {
+        toast.error("Please login to add product to cart");
+
+        // Redirect to login page after 2 seconds
+        setTimeout(() => {
+          window.location.href = "/login"; // Change this to your login page route
+        }, 2000);
+
+        return;
+      }
+      const response: any = await addToCart(userId, product._id, quantity);
+      if (response.statusCode === 200) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error("Failed to added items");
+      console.error(error);
+    }
   };
 
   if (!product) return <p>Loading...</p>; // Show loading while data is fetched
@@ -127,12 +156,12 @@ const ProductDetailsPage = ({ params }: { params: any }) => {
             >
               Buy Now
             </Link>
-            <Link
-              href="/buy"
+            <button
+              onClick={handleAddToCart}
               className="w-36 text-center rounded border-1 border-pink-600 px-2 sm:px-4 py-2 md:py-3 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-200"
             >
               Add to Cart
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -203,6 +232,7 @@ const ProductDetailsPage = ({ params }: { params: any }) => {
         {/* Similar products code */}
         <SimilarProducts category={product.category} />
       </div>
+      <ToastContainer />
     </div>
   );
 };

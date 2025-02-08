@@ -16,6 +16,7 @@ export default function commonLayout({
     <div>
       <Navbar />
       <div className="mx-auto">{children}</div>
+
       <Footer />
     </div>
   );

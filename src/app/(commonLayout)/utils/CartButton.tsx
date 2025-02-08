@@ -2,48 +2,51 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import nexiosInstance from "@/config/nexios.config";
 
 const CartButton = () => {
   const [cartCount, setCartCount] = useState<number>(0);
-  const [user, setUser] = useState<string | null>(null);
 
-  // Function to update cart count
-  const updateCartCount = () => {
-    const cartData = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCartCount(cartData.length);
+  // Fetch Cart Data for the Specific User
+  const fetchCartData = async () => {
+    try {
+      const user = localStorage.getItem("user");
+      const userId = user ? JSON.parse(user)._id : null;
+      if (userId) {
+        const response = await nexiosInstance.get(`/cart/${userId}`); // Adjust API endpoint to accept user ID
+        const cartData = response.data.data;
+        setCartCount(cartData?.length || 0); // Assuming the response contains the cart array for the specific user
+      }
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
   };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Safe to access localStorage here
-      const loggedUser = JSON.parse(localStorage.getItem("user") || "{}");
-      setUser(loggedUser?._id || null);
-
-      updateCartCount(); // Initial cart count load
-
-      // Listen for the custom event "cartUpdated"
-      const handleCartUpdate = () => updateCartCount();
-      window.addEventListener("cartUpdated", handleCartUpdate);
-
-      return () => {
-        window.removeEventListener("cartUpdated", handleCartUpdate);
-      };
+      fetchCartData(); // Fetch user cart data initially
     }
+
+    // Add an interval to refresh cart data every 5 seconds (or any suitable time)
+    const intervalId = setInterval(fetchCartData, 5000);
+
+    // Clear interval when the component unmounts
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <Link href={`/cart/${user}`} className="relative group">
+    <Link href="/my-cart" className="relative group">
       <button className="px-2">
         <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
           width="32.000000pt"
           height="32.000000pt"
-          viewBox="0 0 32.000000 32.000000"
+          viewBox="0 0 32 32"
           preserveAspectRatio="xMidYMid meet"
         >
           <g
-            transform="translate(0.000000,32.000000) scale(0.100000,-0.100000)"
+            transform="translate(0,32) scale(0.1,-0.1)"
             fill="#000000"
             stroke="none"
           >

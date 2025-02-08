@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { addToCart } from "./Cart/AddToCart";
 import { toast, ToastContainer } from "react-toastify";
+import { addToCart } from "./Cart/AddToCart";
 
 const AddToCartPopup = ({
   product,
@@ -26,29 +27,30 @@ const AddToCartPopup = ({
     );
   };
 
-  const user = JSON.parse(localStorage.getItem("user") as string);
-  const userId = user._id;
-
-  const handleAddToCart = async (productId: string, quantity: number) => {
+  const handleAddToCart = async () => {
     try {
-      // Check if userId is available (i.e., the user is logged in)
+      const user = localStorage.getItem("user");
+      const userId = user ? JSON.parse(user)._id : null;
+
       if (!userId) {
         toast.error("Please login to add product to cart");
+
+        // Redirect to login page after 2 seconds
         setTimeout(() => {
-          window.location.href = "/login";
+          window.location.href = "/login"; // Change this to your login page route
         }, 2000);
+
         return;
       }
-
-      // Proceed with adding to cart
-      const result = await addToCart(userId, productId, quantity);
-      if (result.success === true) {
-        toast.success("Product added to cart successfully");
+      const response: any = await addToCart(userId, product._id, quantity);
+      if (response.statusCode === 200) {
+        toast.success(response.message);
       } else {
-        toast.error("Failed to add product to cart");
+        toast.error(response.message);
       }
     } catch (error) {
-      console.error("Failed to add item to cart:", error);
+      toast.error("Failed to added items");
+      console.error(error);
     }
   };
 
@@ -148,9 +150,7 @@ const AddToCartPopup = ({
                 Buy Now
               </button>
               <button
-                onClick={() => {
-                  handleAddToCart(product._id, quantity);
-                }}
+                onClick={handleAddToCart}
                 className="w-36 text-center rounded border border-pink-600 px-4 py-3 text-pink-600 hover:bg-pink-600 hover:text-white transition-all duration-200"
               >
                 Add to Cart
