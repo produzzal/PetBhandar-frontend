@@ -91,18 +91,14 @@ const DesktopCart = ({
                   </td>
                   <td className="py-4 px-4 text-center">
                     <button
-                      onClick={() =>
-                        handleQuantityChange(item.productId, "decrease")
-                      }
+                      onClick={() => handleQuantityChange(item._id, "decrease")}
                       className="bg-gray-300 px-2 py-1 rounded"
                     >
                       -
                     </button>
                     <span className="font-semibold mx-2">{item.quantity}</span>
                     <button
-                      onClick={() =>
-                        handleQuantityChange(item.productId, "increase")
-                      }
+                      onClick={() => handleQuantityChange(item._id, "increase")}
                       className="bg-gray-300 px-2 py-1 rounded"
                     >
                       +

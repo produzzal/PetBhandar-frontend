@@ -33,7 +33,6 @@ const CartPage = () => {
 
         const response = await nexiosInstance.get(`/cart/${userId}`);
         const cartData = response.data.data;
-        console.log(response.data);
 
         if (response.data.success === false) {
           setNoDataMessage("No items in your cart.");
@@ -122,44 +121,78 @@ const CartPage = () => {
     }
   };
 
-  // Handle changing the quantity of an item
+  let updateTimeout: NodeJS.Timeout;
+
   const handleQuantityChange = async (
-    itemId: string,
+    productId: string,
     operation: "increase" | "decrease"
   ) => {
+    const user = localStorage.getItem("user");
+    const userId = user ? JSON.parse(user)._id : null;
+    if (!userId) return;
+
+    let newQuantity = 0;
     const updatedCart = cartItems.map((item) => {
-      if (item.id === itemId) {
-        let newQuantity = item.quantity;
-
-        // Adjust quantity based on the operation
-        if (
-          operation === "increase" &&
-          item.quantity < item.product.availableQuantity
-        ) {
-          newQuantity += 1;
-        } else if (operation === "decrease" && item.quantity > 1) {
-          newQuantity -= 1;
-        }
-
+      if (item._id === productId) {
+        newQuantity =
+          operation === "increase" ? item.quantity + 1 : item.quantity - 1;
         return { ...item, quantity: newQuantity };
       }
       return item;
     });
 
+    // Clear previous timeout to prevent unnecessary API calls
+    clearTimeout(updateTimeout);
+
+    // Update the cart in the UI immediately
     setCartItems(updatedCart);
 
-    // Update the backend with the new quantity
-    try {
-      await axios.put(`/api/cart/${itemId}`, {
-        quantity: updatedCart.find((item) => item.id === itemId)?.quantity,
-      });
-    } catch (error) {
-      console.error("Error updating quantity:", error);
-    }
+    // Delay the API request until 1 second after the last click
+    updateTimeout = setTimeout(async () => {
+      try {
+        const updatedItem = updatedCart.find((item) => item._id === productId);
+        if (!updatedItem) {
+          console.error("❌ Item not found in updated cart");
+          setLoading(false);
+          return;
+        }
+
+        const response = await nexiosInstance.put(`/cart/${userId}`, {
+          product: updatedItem.product._id,
+          quantity: newQuantity,
+        });
+
+        console.log(response.data);
+
+        if (response.data.success === true) {
+          toast.success("Cart updated successfully");
+
+          // Delay page refresh for a smooth loading experience
+          setTimeout(() => {
+            setLoading(false);
+            window.location.reload(); // Trigger reload only once
+          }, 1500);
+        } else {
+          toast.error(response.data.message);
+          setTimeout(() => {
+            setLoading(false);
+            window.location.reload(); // Trigger reload only once
+          }, 1500);
+        }
+      } catch (error) {
+        console.error("❌ Error updating cart item:", error);
+        setLoading(false);
+      }
+    }, 1500); // 🔥 Wait 1 second after last click
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center space-x-2">
+        <div className="w-8 h-8 border-4 border-t-4 border-gray-200 border-solid rounded-full animate-spin border-t-indigo-600"></div>
+        <span className="text-lg font-semibold">Loading...</span>
+      </div>
+    );
   }
 
   if (error) {
